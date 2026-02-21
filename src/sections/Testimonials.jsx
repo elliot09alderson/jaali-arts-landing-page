@@ -1,6 +1,3 @@
-import { useEffect, useRef } from 'react'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { Star } from 'lucide-react'
 
 const testimonials = [
@@ -57,81 +54,29 @@ const StarRating = ({ count }) => (
 )
 
 export default function Testimonials() {
-    const sectionRef = useRef(null)
-    const trackRef   = useRef(null)
-    const progressRef = useRef(null)
-
-    useEffect(() => {
-        // Horizontal scroll-pin only on tablets/desktops
-        if (window.innerWidth < 769) return
-
-        const ctx = gsap.context(() => {
-            const track = trackRef.current
-
-            // How far to slide the track left (negative x)
-            const getScrollAmount = () =>
-                -(track.scrollWidth - track.offsetWidth)
-
-            const st = ScrollTrigger.create({
-                trigger: sectionRef.current,
-                pin: true,
-                scrub: 1.2,
-                start: 'top top',
-                end: () => `+=${Math.abs(getScrollAmount())}`,
-                invalidateOnRefresh: true,
-                onUpdate: (self) => {
-                    if (progressRef.current) {
-                        progressRef.current.style.transform = `scaleX(${self.progress})`
-                    }
-                },
-            })
-
-            gsap.to(track, {
-                x: getScrollAmount,
-                ease: 'none',
-                scrollTrigger: st,
-            })
-        }, sectionRef)
-
-        return () => ctx.revert()
-    }, [])
-
     return (
-        <section className="testimonials" ref={sectionRef} id="testimonials">
-
-            {/* ── Header ── */}
-            <div className="testimonials-hd">
+        <section className="testimonials" id="testimonials">
+            <div className="testimonials-inner">
                 <div className="section-tag">Client Words</div>
-                <h2 className="section-title" style={{ color: 'var(--white)', marginBottom: 0 }}>
+                <h2 className="section-title" style={{ color: 'var(--white)', marginBottom: 56 }}>
                     What Our Clients<br />
                     <em style={{ color: 'var(--terra-light)' }}>Say About Us</em>
                 </h2>
-                <div className="testimonials-scroll-hint">
-                    <span>Scroll to explore</span>
-                    <div className="testimonials-scroll-arrow" />
-                </div>
-            </div>
-
-            {/* ── Horizontal track ── */}
-            <div className="testimonials-track" ref={trackRef}>
-                {testimonials.map((t) => (
-                    <div className="testimonial-card" key={t.name}>
-                        <StarRating count={t.stars} />
-                        <p className="testimonial-text">"{t.text}"</p>
-                        <div className="testimonial-author">
-                            <div className="testimonial-avatar">{t.initials}</div>
-                            <div>
-                                <div className="testimonial-name">{t.name}</div>
-                                <div className="testimonial-role">{t.role}</div>
+                <div className="testimonials-grid">
+                    {testimonials.map((t) => (
+                        <div className="testimonial-card" key={t.name}>
+                            <StarRating count={t.stars} />
+                            <p className="testimonial-text">"{t.text}"</p>
+                            <div className="testimonial-author">
+                                <div className="testimonial-avatar">{t.initials}</div>
+                                <div>
+                                    <div className="testimonial-name">{t.name}</div>
+                                    <div className="testimonial-role">{t.role}</div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                ))}
-            </div>
-
-            {/* ── Progress bar ── */}
-            <div className="testimonials-progress">
-                <div className="testimonials-progress-bar" ref={progressRef} />
+                    ))}
+                </div>
             </div>
         </section>
     )
