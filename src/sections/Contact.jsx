@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react'
-import { Phone, Mail, MapPin, Globe, CheckCircle2, MessageCircle, ArrowRight, Send } from 'lucide-react'
+import { Phone, Mail, MapPin, Globe, CheckCircle2, Send, AlertCircle } from 'lucide-react'
+import { consultationAPI } from '../lib/api'
 
 // WhatsApp SVG inline (brand icon not in lucide)
 const WhatsAppIcon = ({ size = 16 }) => (
@@ -56,17 +57,27 @@ export default function Contact() {
     const [formData, setFormData] = useState({ name: '', email: '', phone: '', service: '', message: '' })
     const [submitted, setSubmitted] = useState(false)
     const [submitting, setSubmitting] = useState(false)
+    const [error, setError] = useState('')
 
-    const handleChange = e => setFormData(p => ({ ...p, [e.target.name]: e.target.value }))
+    const handleChange = e => {
+        setError('')
+        setFormData(p => ({ ...p, [e.target.name]: e.target.value }))
+    }
 
-    const handleSubmit = e => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
         setSubmitting(true)
-        setTimeout(() => {
-            setSubmitting(false)
+        setError('')
+        try {
+            await consultationAPI.create(formData)
             setSubmitted(true)
-            setTimeout(() => setSubmitted(false), 5000)
-        }, 800)
+            setFormData({ name: '', email: '', phone: '', service: '', message: '' })
+            setTimeout(() => setSubmitted(false), 6000)
+        } catch (err) {
+            setError(err.message || 'Something went wrong. Please try again.')
+        } finally {
+            setSubmitting(false)
+        }
     }
 
     return (
@@ -174,6 +185,21 @@ export default function Contact() {
                                     onChange={handleChange}
                                 />
                             </div>
+                            {error && (
+                                <div style={{
+                                    display: 'flex', alignItems: 'center', gap: 8,
+                                    padding: '10px 14px', borderRadius: 4,
+                                    background: 'rgba(239,68,68,0.08)',
+                                    border: '1px solid rgba(239,68,68,0.25)',
+                                    color: '#dc2626',
+                                    fontFamily: 'var(--font-elegant)',
+                                    fontSize: '0.9rem',
+                                    marginBottom: 4,
+                                }}>
+                                    <AlertCircle size={15} strokeWidth={1.8} style={{ flexShrink: 0 }} />
+                                    {error}
+                                </div>
+                            )}
                             <button type="submit" className="form-submit" disabled={submitting}>
                                 {submitting ? (
                                     <>Sending…</>
