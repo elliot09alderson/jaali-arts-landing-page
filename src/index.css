@@ -1017,12 +1017,14 @@ body {
 /* ── TESTIMONIALS ── */
 .testimonials {
   background: var(--charcoal);
-  padding: clamp(64px, 10vw, 120px) clamp(24px, 6vw, 80px);
+  padding: clamp(64px, 10vw, 120px) 0;
+  overflow: hidden;
 }
 
 .testimonials-inner {
   max-width: 1200px;
   margin: 0 auto;
+  padding: 0 clamp(24px, 6vw, 80px);
 }
 
 .testimonials .section-tag {
@@ -1033,13 +1035,35 @@ body {
   background: var(--terra-light);
 }
 
-.testimonials-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 28px;
+/* Fade edges so cards bleed off naturally */
+.testimonials-marquee {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+}
+
+/* Infinite scrolling track — duplicated cards translate -50% = one full loop */
+.testimonials-track {
+  display: flex;
+  gap: 24px;
+  width: max-content;
+  padding: 8px 0 24px;
+  animation: testimonial-scroll 38s linear infinite;
+}
+
+/* Pause on hover anywhere inside the marquee */
+.testimonials-marquee:hover .testimonials-track {
+  animation-play-state: paused;
+}
+
+@keyframes testimonial-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
 }
 
 .testimonial-card {
+  width: clamp(300px, 32vw, 400px);
+  flex-shrink: 0;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 4px;
@@ -1536,10 +1560,6 @@ body {
 
   .gallery-masonry {
     grid-template-columns: repeat(3, 1fr);
-  }
-
-  .testimonials-grid {
-    grid-template-columns: 1fr 1fr;
   }
 
   .instagram-grid {
@@ -2323,9 +2343,9 @@ body {
     display: none;
   }
 
-  /* Testimonials */
-  .testimonials-grid {
-    grid-template-columns: 1fr;
+  /* Testimonials — smaller cards on mobile */
+  .testimonial-card {
+    width: clamp(260px, 78vw, 340px);
   }
 
   /* Instagram */

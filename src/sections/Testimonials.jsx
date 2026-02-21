@@ -54,6 +54,9 @@ const StarRating = ({ count }) => (
 )
 
 export default function Testimonials() {
+    // Duplicate cards so the marquee loops seamlessly (translate -50%)
+    const doubled = [...testimonials, ...testimonials]
+
     return (
         <section className="testimonials" id="testimonials">
             <div className="testimonials-inner">
@@ -62,9 +65,13 @@ export default function Testimonials() {
                     What Our Clients<br />
                     <em style={{ color: 'var(--terra-light)' }}>Say About Us</em>
                 </h2>
-                <div className="testimonials-grid">
-                    {testimonials.map((t) => (
-                        <div className="testimonial-card" key={t.name}>
+            </div>
+
+            {/* Marquee container — hover pauses the track */}
+            <div className="testimonials-marquee">
+                <div className="testimonials-track">
+                    {doubled.map((t, i) => (
+                        <div className="testimonial-card" key={i}>
                             <StarRating count={t.stars} />
                             <p className="testimonial-text">"{t.text}"</p>
                             <div className="testimonial-author">
