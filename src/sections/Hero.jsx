@@ -2,8 +2,10 @@ import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
-// Collected images from both aesthetics and mixed folders
-const heroImage = '/aesthetics/476836530_657269726628263_6879647700838262961_n.jpg'
+// Hero backdrop — pick best shot from your collection here
+// Hero backdrop — AI-generated custom artwork
+const heroImage = '/hero-ai.png'
+
 
 export default function Hero() {
     const bgRef = useRef(null)
